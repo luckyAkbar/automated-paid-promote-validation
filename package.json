@@ -1,0 +1,18 @@
+{
+  "name": "capstone",
+  "version": "1.0.0",
+  "description": "dibuat untuk memenuhi tugas capstone Kampus Merdeka Dicoding -> Machine Learning and Frontend Web Developer",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "lucky akbar - wayan adi palguna",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
