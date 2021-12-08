@@ -8,7 +8,8 @@ const PaidPromoteEvent = require('../classses/PaidPromoteEvent');
 
 const createPaidPromoteEventHandler = (req, res) => {
   const maxUploadedImages = Number(process.env.MAX_UPLOADED_IMAGES_IN_CREATE_VALIDATION_FORM);
-  const imageUploadHandler = new ImageUploadProcessor('avatar', maxUploadedImages);
+  const imageUploadFieldName = process.env.IMAGE_UPLOAD_FIELDNAME_FOR_CREATE_VALIDATION_FORM
+  const imageUploadHandler = new ImageUploadProcessor(imageUploadFieldName, maxUploadedImages);
   const multiUploadHandler = imageUploadHandler.createMultiUploadHandler();
   const mandatoryKeyLists = process.env.LIST_MANDATORY_KEY_DATA_TO_VALIDATE_CREATE_VALIDATION_FORM.split(',');
   const minUploadedImage = 1;
@@ -35,21 +36,3 @@ const createPaidPromoteEventHandler = (req, res) => {
 };
 
 module.exports = { createPaidPromoteEventHandler };
-
-// console.log(req.files);
-//   console.log(req.file);
-//   res.sendStatus(200);
-//   return
-//   try {
-//     const paidPromoteEvent = new PaidPromoteEvent(
-//       eventName = 'Test Event Name',
-//       startDate = '2021-12-19',
-//       endDate = '2021-12-21',
-//     );
-
-//     await paidPromoteEvent.createEvent();
-
-//     res.status(201).json({ message: 'OK' })
-//   } catch (e) {
-//     console.log('error happen:', e);
-//   }
