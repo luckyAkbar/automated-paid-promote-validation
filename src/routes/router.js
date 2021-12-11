@@ -1,12 +1,8 @@
 const router = require('express').Router();
-const express = require('express');
-const app = express();
-// const multer = require('multer');
-// const upload = multer({ dest: 'uploads/' }).array('avatar', 10);
-
-// const { ImageUploadProcessor } = require('../classses/ImageUploadProcessor');
 
 const { createPaidPromoteEventHandler } = require('../handler/createPaidPromoteEventHandler');
+const { paidPromoteParticipantImageHandler } = require('../handler/paidPromoteParticipantImageUploadHandler');
+const { eventDataHandler } = require('../handler/eventDataHandler');
 
 router.route('/')
   .get((req, res) => {
@@ -14,26 +10,13 @@ router.route('/')
   });
 
 router.route('/create')
-  .post((req, res) => {
-    createPaidPromoteEventHandler(req, res);
-    // const upload = new ImageUploadProcessor().singleImageUploadHandler().array('avatar');
-    // upload(req, res, (err) => {
-    //   if (err) {
-    //     res.status(403).json({ errorMessage: `${CustomError.imageUploadErrorMessage} Error message: ${err.message}` });
-    //     return;
-    //   }
+  .post(createPaidPromoteEventHandler);
 
-    //   console.log(req.files);
-    //   res.sendStatus(200);
-    // });
-  })
-  .get((req, res) => {
-    res.status(200).end(`
-      <form action="/create" method="post" enctype="multipart/form-data">
-        <input type="file" name="avatar" />
-      </form>
-    `);
-  });
+router.route('/form/:eventID')
+  .post(eventDataHandler);
+
+router.route('/upload/:eventID')
+  .post(paidPromoteParticipantImageHandler);
 
 router.route('/validation-form/:formId')
   .get((req, res) => {
