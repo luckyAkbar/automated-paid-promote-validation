@@ -28,7 +28,15 @@ const paidPromoteEvent = new mongoose.Schema({
     default: 1,
   },
 
-  caption: String,
+  participantsList: {
+    type: [String],
+    required: false,
+  },
+
+  caption: {
+    type: String,
+    required: false,
+  },
 });
 
 const PaidPromoteEvent = mongoose.model('PaidPromoteEvent', paidPromoteEvent);
