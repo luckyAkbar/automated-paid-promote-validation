@@ -1,10 +1,10 @@
 'use strict';
 require('dotenv').config();
 
-const ImageUploadProcessor = require('../classses/ImageUploadProcessor');
-const CustomError = require('../classses/CustomError');
-const Validator = require('../classses/Validator');
-const PaidPromoteEvent = require('../classses/PaidPromoteEvent');
+const ImageUploadProcessor = require('../classes/ImageUploadProcessor');
+const CustomError = require('../classes/CustomError');
+const Validator = require('../classes/Validator');
+const PaidPromoteEvent = require('../classes/PaidPromoteEvent');
 
 const createPaidPromoteEventHandler = (req, res) => {
   const maxUploadedImages = Number(process.env.MAX_UPLOADED_IMAGES_IN_CREATE_VALIDATION_FORM);
@@ -25,12 +25,11 @@ const createPaidPromoteEventHandler = (req, res) => {
   
     try {
       Validator.createValidationForm(req, minUploadedImage, mandatoryKeyLists);
-      const result = await paidPromoteEvent.createEvent();
+      const { _id } = await paidPromoteEvent.createEvent();
   
-      res.status(201).json({ eventId: result._id });
+      res.status(201).json({ eventID: _id });
     } catch (e) {
-      console.log(e);
-      res.status(e.HTTPErrorStatus).json({ message: e.errrorMsg })
+      res.status(e.HTTPErrorStatus).json({ message: e.errorMsg })
     }
   });
 };
