@@ -42,6 +42,26 @@ class Validator {
     if (end === 'Invalid Date') throw new CustomError('End date must be instance of Date.');
     if (end < now) throw new CustomError('Event must not end before now.');
     if (end < start) throw new CustomError('Event must not end before starts.');
+  };
+
+  static emailAddress(email) {
+    const forbiddenEmailChar = /[!#$%^&*()_+\-=\[\]{};':"\\|,<>\/?]+/;
+    const emailParts = email.split('@');
+    const serverEmail = emailParts[1].split('.');
+
+    try {
+      assert.notStrictEqual((emailParts[0].length > 105 || emailParts[1].length > 105), true);
+      assert.notStrictEqual((emailParts[0].length === 0 || emailParts[1].length === 1), true);
+      assert.notStrictEqual((serverEmail[0].length === 0 || serverEmail[1].length === 0), true);
+      assert.notStrictEqual((!(/[.]/.test(emailParts[1])) || !(/@/.test(email))), true);
+      assert.notStrictEqual(forbiddenEmailChar.test(email), true);
+    } catch (e) {
+      throw new CustomError('Your email is invalid. Please recheck your email address.');
+    }
+  };
+
+  static passwordLength(plainPassword) {
+    assert.notStrictEqual((String(plainPassword).length < 8), true, new CustomError('Password must be at least 8 characters long.'));
   }
 }
 
