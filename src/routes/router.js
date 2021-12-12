@@ -3,6 +3,9 @@ const router = require('express').Router();
 const { createPaidPromoteEventHandler } = require('../handler/createPaidPromoteEventHandler');
 const { paidPromoteParticipantImageHandler } = require('../handler/paidPromoteParticipantImageUploadHandler');
 const { eventDataHandler } = require('../handler/eventDataHandler');
+const { signupHandler } = require('../handler/signupHandler');
+const { loginHandler } = require('../handler/loginHandler');
+const { checkLoginStatus } = require('../middleware/checkLoginStatus');
 
 router.route('/')
   .get((req, res) => {
@@ -11,6 +14,17 @@ router.route('/')
 
 router.route('/create')
   .post(createPaidPromoteEventHandler);
+
+router.route('/login')
+  .post(loginHandler);
+
+router.route('/signup')
+  .post(signupHandler);
+
+router.route('/protected')
+  .get(checkLoginStatus, (req, res) => {
+    res.sendStatus(200);
+  })
 
 router.route('/form/:eventID')
   .post(eventDataHandler);
