@@ -29,7 +29,7 @@ const loginSession = new mongoose.Schema({
 
   expiredAt: {
     type: Number,
-    default: Date.now() + Number(process.env.JWT_LOGIN_COOKIE_EXPIRES_SEC) * 1000,
+    default: (Date.now() + (Number(process.env.JWT_LOGIN_COOKIE_EXPIRES_SEC) * 1000)),
   },
 });
 
