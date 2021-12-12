@@ -61,7 +61,11 @@ class Validator {
   };
 
   static passwordLength(plainPassword) {
-    assert.notStrictEqual((String(plainPassword).length < 8), true, new CustomError('Password must be at least 8 characters long.'));
+    assert.notStrictEqual(
+      (String(plainPassword).length < Number(process.env.MINIMAL_PASSWORD_LENGTH)),
+      true,
+      new CustomError(`Password must be at least ${process.env.MINIMAL_PASSWORD_LENGTH} characters long.`)
+    );
   }
 }
 
