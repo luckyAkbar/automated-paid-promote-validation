@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style/style-login.css">
+    <link rel="stylesheet" href="/style/style-sign-up.css">
     <title>Automated Paid Promote Validation</title>
 </head>
 <body>
     <h1>Automated Paid Promote Validation</h1>
     <div class="login-form">
-        <img src="/img/user.png" alt="user-icon">
-        <form action="" method="">
+        <h2>Create Account</h2>
+        <form action="/signup" method="POST">
             <div>
                 <label for="email"></label>
                 <input type="email" name="email" id="email" placeholder="Email" required>
@@ -21,10 +21,11 @@
                 <input type="password" name="password" id="password" placeholder="Password" required>
             </div>
             <div>
-                <button type="submit" id="button">Login</button>
+                <label for="confirm-password"></label>
+                <input type="password" name="confirmPassword" id="confirm-password" placeholder="Retype Password" required>
             </div>
             <div>
-                <p>Not registered? <a href="#">Create an account</a></p>
+                <button type="submit" id="button">Sign Up</button>
             </div>
         </form>
     </div>

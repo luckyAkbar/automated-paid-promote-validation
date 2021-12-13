@@ -21,7 +21,7 @@ class Signup {
     assert.notStrictEqual(this._plainPassword, undefined, new CustomError('Password must not be empty', 403));
     assert.strictEqual(process.env.AVAILABLE_ROLES.split(',').includes(this.role), true, new CustomError(`Role ${this.role} is not exists.`, 403));
     Validator.emailAddress(this.emailAddress);
-    Validator.passwordLength(this.plainPassword);
+    Validator.passwordLength(this._plainPassword);
   };
 
   async _checkIsEmailAlreadyUsed() {

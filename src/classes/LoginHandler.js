@@ -19,11 +19,23 @@ class LoginHandler {
 
   static async clearOldLoginSession() {
     try {
-      LoginSession.deleteMany({ expiredAt: { $lte: Date.now() }})
+      await LoginSession.deleteMany({ expiredAt: { $lte: Date.now() }})
     } catch (e) {
       console.log('System failed to delete expired login session. This may caused DB to store junk.', e)
     }
   };
+
+  static async checkIsAlreadyLoggedIn(cookies) {
+    if (cookies === undefined) return;
+
+    try {
+      await Auth.verifyJWT(cookies[process.env.LOGIN_COOKIES_CODENAME]);
+      throw new Error()
+    } catch (e) {
+      if (e instanceof CustomError) return;
+      throw new CustomError('You are already logged in', 400);
+    }
+  }
 
   set rawLoginToken(rawJWT) {
     this.loginToken = noSQLSanitizer(rawJWT);
@@ -67,12 +79,12 @@ class LoginHandler {
     }
   };
 
-  async sendCookies(res) {
+  async setCookies(res) {
     this.JWTLoginCookies = await this._createLoginCookies();
     res.status(200).cookie(process.env.LOGIN_COOKIES_CODENAME, this.JWTLoginCookies, {
       maxAge: Number(process.env.JWT_LOGIN_COOKIE_EXPIRES_SEC) * 1000,
       httpOnly: true,
-    }).send();
+    });
   };
 
   async registerNewSession() {
@@ -93,10 +105,11 @@ class LoginHandler {
     if (this.loginToken === undefined) return;
 
     try {
-      const { email } = await Auth.verifyJWT(this.loginToken[process.env.LOGIN_COOKIES_CODENAME]);
-      assert.notStrictEqual(email, this.email);
+      await Auth.verifyJWT(this.loginToken[process.env.LOGIN_COOKIES_CODENAME]);
+      throw new Error();
     } catch (e) {
-      throw new CustomError('You are already logged in.');
+      if (e instanceof CustomError) return;
+      throw new CustomError('You are already logged in', 400);
     }
   }
 }

@@ -50,6 +50,7 @@ class Validator {
     const serverEmail = emailParts[1].split('.');
 
     try {
+      assert.notStrictEqual((String(email).length > 255), true);
       assert.notStrictEqual((emailParts[0].length > 105 || emailParts[1].length > 105), true);
       assert.notStrictEqual((emailParts[0].length === 0 || emailParts[1].length === 1), true);
       assert.notStrictEqual((serverEmail[0].length === 0 || serverEmail[1].length === 0), true);
