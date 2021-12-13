@@ -21,10 +21,11 @@ const createPaidPromoteEventHandler = (req, res) => {
     }
   
     const paidPromoteData = PaidPromoteEvent.getPaidPromoteData(req.body, req.files);
-    const paidPromoteEvent = new PaidPromoteEvent(paidPromoteData);
   
     try {
       Validator.createValidationForm(req, minUploadedImage, mandatoryKeyLists);
+      
+      const paidPromoteEvent = new PaidPromoteEvent(paidPromoteData);
       const { _id } = await paidPromoteEvent.createEvent();
   
       res.status(201).json({ eventID: _id });
