@@ -23,7 +23,10 @@ class PaidPromoteEvent {
     this.caption = caption;
     this.baseImageNames = baseImageNames;
     this.maxUploadedImagesByParticipant = maxUploadedImagesByParticipant;
-  }
+    
+    assert.notStrictEqual(String(this.startDate), 'Invalid Date', new CustomError('Invalid date on startDate field.'));
+    assert.notStrictEqual(String(this.endDate), 'Invalid Date', new CustomError('Invalid date on endDate field.'));
+  };
 
   _assertNotNull(configurationObject) {
     const mandatoryDataToInstantiateValidationForm = process.env.LIST_MANDATORY_DATA_TO_INSTANTIATE_NEW_VALIDATION_FORM.split(',');
@@ -32,7 +35,7 @@ class PaidPromoteEvent {
       const keyName = mandatoryDataToInstantiateValidationForm[i]
       assert.notStrictEqual(configurationObject[keyName], undefined, `Please define ${keyName} so it's not null.`)
     }
-  }
+  };
 
   async createEvent() {
     const paidPromoteEvent = new PaidPromoteEventModel({
@@ -49,7 +52,7 @@ class PaidPromoteEvent {
     } catch (e) {
       throw new CustomError(`System failed to create new Validation Form: ${this.eventName}.`, 500);
     }
-  }
+  };
 
   static getBaseImagesPath(uploadedFiles) {
     const imagesPath = [];
@@ -59,7 +62,7 @@ class PaidPromoteEvent {
     }
 
     return imagesPath;
-  }
+  };
 
   static getPaidPromoteData(body, files) {
     const requestBody = noSQLSanitizer(body);
