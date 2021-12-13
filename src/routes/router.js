@@ -2,9 +2,10 @@ const router = require('express').Router();
 
 const { createPaidPromoteEventHandler } = require('../handler/createPaidPromoteEventHandler');
 const { paidPromoteParticipantImageHandler } = require('../handler/paidPromoteParticipantImageUploadHandler');
-const { eventDataHandler } = require('../handler/eventDataHandler');
-const { signupHandler } = require('../handler/signupHandler');
-const { loginHandler } = require('../handler/loginHandler');
+const { eventDataHandler, renderInputFormPage } = require('../handler/eventDataHandler');
+const { signupHandler, renderSignupPage } = require('../handler/signupHandler');
+const { loginHandler, renderLoginPage } = require('../handler/loginHandler');
+const { renderAdminPage } = require('../handler/adminPageHandler');
 const { checkLoginStatus } = require('../middleware/checkLoginStatus');
 
 router.route('/')
@@ -16,17 +17,23 @@ router.route('/create')
   .post(createPaidPromoteEventHandler);
 
 router.route('/login')
+  .get(renderLoginPage)
   .post(loginHandler);
 
 router.route('/signup')
+  .get(renderSignupPage)
   .post(signupHandler);
 
 router.route('/protected')
   .get(checkLoginStatus, (req, res) => {
     res.sendStatus(200);
-  })
+  });
+
+router.route('/admin')
+  .get(checkLoginStatus, renderAdminPage);
 
 router.route('/form/:eventID')
+  .get(renderInputFormPage)
   .post(eventDataHandler);
 
 router.route('/upload/:eventID')
