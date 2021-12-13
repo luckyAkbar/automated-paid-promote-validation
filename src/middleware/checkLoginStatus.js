@@ -1,7 +1,7 @@
 'use strict';
+require('dotenv').config();
 
 const Auth = require('../classes/Auth');
-const CustomError = require('../classes/CustomError');
 
 const checkLoginStatus = async (req, res, next) => {
   const { cookies } = req;
@@ -9,9 +9,9 @@ const checkLoginStatus = async (req, res, next) => {
   try {
     const loginChecker = new Auth(cookies, Number(process.env.LOGIN_REQUIRED_ROUTE_MINIMUM_PERMISSION));
     await loginChecker.createLoginCheckerMiddleware();
-    next()
+    next();
   } catch (e) {
-    res.status(e.HTTPErrorStatus).json({ message: e.message });
+    res.status(e.HTTPErrorStatus).redirect('/login');
     return;
   }
 };
