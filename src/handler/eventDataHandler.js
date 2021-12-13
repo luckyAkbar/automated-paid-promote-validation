@@ -16,4 +16,8 @@ const eventDataHandler = async (req, res) => {
   }
 };
 
-module.exports = { eventDataHandler };
+const renderInputFormPage = (req, res) => {
+  res.status(200).render('user-page');
+};
+
+module.exports = { eventDataHandler, renderInputFormPage };
