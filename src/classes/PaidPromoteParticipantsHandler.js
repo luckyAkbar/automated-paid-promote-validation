@@ -126,8 +126,6 @@ class PaidPromoteParticipantsHandler {
           eventID: cleanEventID,
         },
       );
-
-      console.log('this is update result', updateResult);
     } catch (e) {
       throw new CustomError(e.message);
     }
