@@ -2,6 +2,7 @@
 
 const assert = require('assert').strict;
 const noSQLSanitizer = require('mongo-sanitize');
+const axios = require('axios');
 const CustomError = require('./CustomError');
 const PaidPromoteEventModel = require('../../models/paidPromoteEvent');
 
