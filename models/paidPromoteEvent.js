@@ -3,6 +3,11 @@
 const mongoose = require('mongoose');
 
 const paidPromoteEvent = new mongoose.Schema({
+  _id: {
+    type: mongoose.Types.ObjectId,
+    required: true,
+  },
+
   eventName: {
     type: String,
     required: [true, 'Please set event name.'],
