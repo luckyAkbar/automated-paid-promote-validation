@@ -24,6 +24,8 @@ class PaidPromoteEvent {
     this.caption = caption;
     this.baseImageNames = baseImageNames;
     this.maxUploadedImagesByParticipant = maxUploadedImagesByParticipant;
+    this.eventID = null;
+    this.OCRResult = [];
     
     assert.notStrictEqual(String(this.startDate), 'Invalid Date', new CustomError('Invalid date on startDate field.'));
     assert.notStrictEqual(String(this.endDate), 'Invalid Date', new CustomError('Invalid date on endDate field.'));
