@@ -3,87 +3,72 @@
 const assert = require('assert').strict;
 const noSQLSanitizer = require('mongo-sanitize');
 const axios = require('axios');
+const ObjectId = require('mongoose').Types.ObjectId;
 const CustomError = require('./CustomError');
 const PaidPromoteEventModel = require('../../models/paidPromoteEvent');
 
 class PaidPromoteEvent {
-  constructor(paidPromoteData) {
-    const {
-      eventName,
-      startDate,
-      endDate,
-      baseImageNames,
-      maxUploadedImagesByParticipant,
-      caption = '',
-    } = paidPromoteData;
-
-    this._assertNotNull(paidPromoteData);
-    this.eventName = eventName;
-    this.startDate = new Date(startDate);
-    this.endDate = new Date(endDate);
-    this.caption = caption;
-    this.baseImageNames = baseImageNames;
-    this.maxUploadedImagesByParticipant = maxUploadedImagesByParticipant;
-    this.eventID = null;
+  constructor(eventDetail) {
+    this.eventID = String(new ObjectId());
+    this.eventName = eventDetail.eventName;
+    this.startDate = new Date(eventDetail.startDate);
+    this.endDate = new Date(eventDetail.endDate);
+    this.baseImageNames = eventDetail.baseImageNames;
+    this.maxUploadedImagesByParticipant = Number(eventDetail.maxUploadedImagesByParticipant);
+    this.participantsList = eventDetail.participantsList;
+    this.caption = '';
     this.OCRResult = [];
     
-    assert.notStrictEqual(String(this.startDate), 'Invalid Date', new CustomError('Invalid date on startDate field.'));
-    assert.notStrictEqual(String(this.endDate), 'Invalid Date', new CustomError('Invalid date on endDate field.'));
+    this._validate();
   };
 
-  _assertNotNull(configurationObject) {
+  _validate() {
     const mandatoryDataToInstantiateValidationForm = process.env.LIST_MANDATORY_DATA_TO_INSTANTIATE_NEW_VALIDATION_FORM.split(',');
+
+    assert.notStrictEqual(String(this.startDate), 'Invalid Date', new CustomError('Invalid date on startDate field.'));
+    assert.notStrictEqual(String(this.endDate), 'Invalid Date', new CustomError('Invalid date on endDate field.'));
+    assert.notStrictEqual((this.maxUploadedImagesByParticipant < 1), true, new CustomError('Minimal image uploaded must be greater than 1'));
 
     for (let i = 0; i < mandatoryDataToInstantiateValidationForm.length; i++) {
       const keyName = mandatoryDataToInstantiateValidationForm[i]
-      assert.notStrictEqual(configurationObject[keyName], undefined, `Please define ${keyName} so it's not null.`)
+      assert.notStrictEqual(this[keyName], undefined, `Please define ${keyName} so it's not null.`);
     }
   };
 
   async createEvent() {
-    const paidPromoteEvent = new PaidPromoteEventModel({
-      eventName: this.eventName,
-      startDate: this.startDate,
-      endDate: this.endDate,
-      baseImages: this.baseImageNames,
-      caption: this.caption,
-      maxUploadedImagesByParticipant: this.maxUploadedImagesByParticipant,
-    });
-
     try {
-      const result = await paidPromoteEvent.save();
-      this.eventID = result._id;
+      this.OCRResult = await this._getOCRResult();
+      const paidPromoteEvent = new PaidPromoteEventModel({
+        _id: this.eventID,
+        eventName: this.eventName,
+        startDate: this.startDate,
+        endDate: this.endDate,
+        baseImages: this.baseImageNames,
+        maxUploadedImagesByParticipant: this.maxUploadedImagesByParticipant,
+        participantsList: this.participantsList,
+        caption: this.caption,
+        OCRResult: this.OCRResult,
+      });
 
-      return result;
+      await paidPromoteEvent.save();
+
+      return this.eventID;
     } catch (e) {
       throw new CustomError(`System failed to create new Validation Form: ${this.eventName}.`, 500);
     }
   };
 
-  async getOCRResult() {
+  async _getOCRResult() {
     try {
-      const { data } = await axios.post('http://127.0.0.1:6008', {
+      const { data } = await axios.post(process.env.OCR_API_URL, {
         image_names: this.baseImageNames,
       });
 
-      this.OCRResult = data.result;
+      return data.result;
     } catch (e) {
       console.log('System failed to fetch ocr result from OCR api. This will make ocr result on DB storing null value. Full error message:', e);
     }
   };
-
-  async storeOCRResult() {
-    try {
-      await PaidPromoteEventModel.findOneAndUpdate(
-        this.eventID,
-        {
-          OCRResult: this.OCRResult,
-        },
-      );
-    } catch (e) {
-      console.log('System failed to store OCR result on DB. This will make DB still save OCR result as null.)', e);
-    }
-  }
 
   static getBaseImagesPath(uploadedFiles) {
     const imagesPath = [];
@@ -99,22 +84,15 @@ class PaidPromoteEvent {
     const requestBody = noSQLSanitizer(body);
     const uploadedFiles = noSQLSanitizer(files);
 
-    const fullValidationFormFields = process.env.LIST_FULL_DATA_TO_INSTANTIATE_NEW_VALIDATION_FORM.split(',');
+    const fullFields = process.env.LIST_FULL_DATA_TO_INSTANTIATE_NEW_VALIDATION_FORM.split(',');
     const configurationObject = {};
 
-    for (let i = 0; i < fullValidationFormFields.length; i++) {
-      const keyName = fullValidationFormFields[i]
-      
-      try {
-        assert.notStrictEqual(requestBody[keyName], undefined);
-        configurationObject[keyName] = requestBody[keyName];
-      } catch (e) {
-        continue;
-      }
+    for (let i = 0; i < fullFields.length; i++) {
+      const keyName = fullFields[i]
+      configurationObject[keyName] = requestBody[keyName];
     }
 
     configurationObject['baseImageNames'] = this.getBaseImagesPath(uploadedFiles);
-
     return configurationObject;
   };
 
