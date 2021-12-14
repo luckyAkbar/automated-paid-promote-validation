@@ -26,13 +26,11 @@ const createPaidPromoteEventHandler = (req, res) => {
       Validator.createValidationForm(req, minUploadedImage, mandatoryKeyLists);
       
       const paidPromoteEvent = new PaidPromoteEvent(paidPromoteData);
-      const { _id } = await paidPromoteEvent.createEvent();
-  
-      res.status(201).json({ eventID: _id });
+      res.status(201).json({ eventID: paidPromoteEvent.eventID });
 
-      await paidPromoteEvent.getOCRResult();
-      await paidPromoteEvent.storeOCRResult();
+      await paidPromoteEvent.createEvent();
     } catch (e) {
+      console.log(e)
       res.status(e.HTTPErrorStatus).json({ message: e.errorMsg })
     }
   });
