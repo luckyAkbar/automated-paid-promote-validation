@@ -37,6 +37,12 @@ const paidPromoteEvent = new mongoose.Schema({
     type: String,
     required: false,
   },
+
+  OCRResult: {
+    type: Array,
+    default: [],
+    required: false,
+  },
 });
 
 const PaidPromoteEvent = mongoose.model('PaidPromoteEvent', paidPromoteEvent);
