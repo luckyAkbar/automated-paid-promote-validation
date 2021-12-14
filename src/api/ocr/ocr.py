@@ -2,7 +2,7 @@ from PIL import Image
 import pytesseract
 import os
 
-base_path = '/home/lucky/lucky/project/dicoding-kamer/capstone/uploads/';
+base_path = '../../../uploads/';
 
 def read_text_from_image(image_name):
     try:
