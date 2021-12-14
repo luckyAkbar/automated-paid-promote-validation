@@ -51,11 +51,39 @@ class PaidPromoteEvent {
     });
 
     try {
-      return await paidPromoteEvent.save();
+      const result = await paidPromoteEvent.save();
+      this.eventID = result._id;
+
+      return result;
     } catch (e) {
       throw new CustomError(`System failed to create new Validation Form: ${this.eventName}.`, 500);
     }
   };
+
+  async getOCRResult() {
+    try {
+      const { data } = await axios.post('http://127.0.0.1:6008', {
+        image_names: this.baseImageNames,
+      });
+
+      this.OCRResult = data.result;
+    } catch (e) {
+      console.log('System failed to fetch ocr result from OCR api. This will make ocr result on DB storing null value. Full error message:', e);
+    }
+  };
+
+  async storeOCRResult() {
+    try {
+      await PaidPromoteEventModel.findOneAndUpdate(
+        this.eventID,
+        {
+          OCRResult: this.OCRResult,
+        },
+      );
+    } catch (e) {
+      console.log('System failed to store OCR result on DB. This will make DB still save OCR result as null.)', e);
+    }
+  }
 
   static getBaseImagesPath(uploadedFiles) {
     const imagesPath = [];
