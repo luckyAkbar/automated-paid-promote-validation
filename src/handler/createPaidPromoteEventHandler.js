@@ -29,6 +29,9 @@ const createPaidPromoteEventHandler = (req, res) => {
       const { _id } = await paidPromoteEvent.createEvent();
   
       res.status(201).json({ eventID: _id });
+
+      await paidPromoteEvent.getOCRResult();
+      await paidPromoteEvent.storeOCRResult();
     } catch (e) {
       res.status(e.HTTPErrorStatus).json({ message: e.errorMsg })
     }
