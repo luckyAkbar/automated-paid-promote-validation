@@ -50,7 +50,7 @@ const paidPromoteEvent = new mongoose.Schema({
   },
 
   OCRResult: {
-    type: Array,
+    type: [String],
     default: [],
     required: false,
   },
