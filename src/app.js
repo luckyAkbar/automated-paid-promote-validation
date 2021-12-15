@@ -10,7 +10,6 @@ const { router } = require('./routes/router');
 const app = express();
 app.set('view engine', 'ejs');
 app.use(cookieParser());
-app.use(helmet());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json({ type: 'application/json' }), incorrectJSONFormatHandler);
 app.use(express.static('public/'));
