@@ -1,0 +1,5 @@
+node_modules/
+.env
+testScript.js
+uploads/
+src/api/ocr/__pycache__
