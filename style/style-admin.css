@@ -28,10 +28,14 @@ h2 {
     border-radius: 15px;
 }
 
-#username, 
-#email, 
-#password, 
-#confirm-password {
+#name, 
+#nim, 
+#screenshot, 
+#caption, 
+#start-date, 
+#start-time, 
+#end-date, 
+#end-time {
     align-items: center;
     width: 100%;
     padding: 10px;
