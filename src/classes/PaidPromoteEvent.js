@@ -118,14 +118,17 @@ class PaidPromoteEvent {
     const cleanEventID = noSQLSanitizer(eventID);
 
     try {
-      const { maxUploadedImagesByParticipant } = await PaidPromoteEventModel.findById(cleanEventID).select({
+      const result = await PaidPromoteEventModel.findById(cleanEventID).select({
         _id: 0,
         maxUploadedImagesByParticipant: 1,
       });
 
-      return maxUploadedImagesByParticipant;
+      assert.notStrictEqual(result, null, `Event with ID: ${eventID} is not found.`);
+
+      return result.maxUploadedImagesByParticipant;
     } catch (e) {
-      throw new CustomError(`System failed to get max uploaded images from event with ID: ${eventID}.`, 500);
+      if (e instanceof mongoose.Error.CastError) console.log('p')
+      throw new CustomError(e.message, 400);
     }
   };
 };
