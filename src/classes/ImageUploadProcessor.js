@@ -1,9 +1,9 @@
 'use strict';
 require('dotenv').config();
 
-const CustomError = require('./CustomError');
 const crypto = require('crypto');
 const multer = require('multer');
+const CustomError = require('./CustomError');
 
 class ImageUploadProcessor {
   constructor(fieldname, maxFiles = 3) {
