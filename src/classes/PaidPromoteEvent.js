@@ -127,8 +127,8 @@ class PaidPromoteEvent {
 
       return result.maxUploadedImagesByParticipant;
     } catch (e) {
-      if (e instanceof mongoose.Error.CastError) console.log('p')
-      throw new CustomError(e.message, 400);
+      if (e instanceof mongoose.Error.CastError) throw new CustomError('Event ID not valid');
+      throw new CustomError('System failed to get necessary data to process handling agent.', 500); 
     }
   };
 };
