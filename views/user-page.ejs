@@ -11,14 +11,22 @@
     <h1>Automated Paid Promote Validation</h1>
     <div class="login-form">
         <h2>User Page</h2>
-        <form action="" method="">
+        <form action="?" method="POST" enctype="multipart/form-data">
             <div>
                 <label for="name"></label>
                 <input type="text" name="name" id="name" placeholder="Nama" required>
             </div>
             <div>
                 <label for="nim"></label>
-                <input type="text" name="nim" id="nim" placeholder="Nomor Induk Mahasiswa" required>
+                <input type="text" name="NIM" id="nim" placeholder="Nomor Induk Mahasiswa" required>
+            </div>
+            <div>
+                <label for="nim"></label>
+                <input type="text" name="usernameIG" id="nim" placeholder="Username IG" required>
+            </div>
+            <div>
+                <label for="nim"></label>
+                <input type="text" name="email" id="nim" placeholder="alamat email" required>
             </div>
             <div>
                 <label for="sie"></label>
@@ -26,7 +34,7 @@
             </div>
             <div>
                 <label for="screenshot"></label>
-                <input type="file" name="screenshot" id="screenshot" required>
+                <input type="file" name="participantImage" id="screenshot" required>
             </div>
             <div>
                 <button type="submit" id="button">Submit</button>
