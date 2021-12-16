@@ -72,6 +72,22 @@ class PaidPromoteEvent {
     }
   };
 
+  static async validateEvent(eventID) {
+    const cleanEventID = noSQLSanitizer(eventID);
+    const now = new Date();
+
+    try {
+      assert.strictEqual(String(cleanEventID).length, 24, 'Event ID is invalid');
+      const result = await PaidPromoteEventModel.findById(cleanEventID);
+
+      assert.notStrictEqual(result, null, 'Event not found.');
+      assert.notStrictEqual((result.startDate > now), true, 'Event not started yet.');
+      assert.notStrictEqual((result.endDate < now), true, 'Event already closed');
+    } catch (e) {
+      throw new CustomError(e.message);
+    }
+  };
+
   static getBaseImagesPath(uploadedFiles) {
     const imagesPath = [];
 
