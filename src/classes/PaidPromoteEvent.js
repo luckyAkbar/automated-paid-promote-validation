@@ -4,19 +4,21 @@ const assert = require('assert').strict;
 const noSQLSanitizer = require('mongo-sanitize');
 const axios = require('axios');
 const ObjectId = require('mongoose').Types.ObjectId;
+const mongoose = require('mongoose');
 const CustomError = require('./CustomError');
 const PaidPromoteEventModel = require('../../models/paidPromoteEvent');
 
 class PaidPromoteEvent {
-  constructor(eventDetail) {
+  constructor(eventData) {
+    const eventDetail = noSQLSanitizer(eventData);
     this.eventID = String(new ObjectId());
     this.eventName = eventDetail.eventName;
     this.startDate = new Date(eventDetail.startDate);
     this.endDate = new Date(eventDetail.endDate);
     this.baseImageNames = eventDetail.baseImageNames;
-    this.maxUploadedImagesByParticipant = Number(eventDetail.maxUploadedImagesByParticipant);
+    this.maxUploadedImagesByParticipant = Number(eventDetail.maxUploadedImagesByParticipant) > 0 ? Number(eventDetail.maxUploadedImagesByParticipant): 1;
     this.participantsList = eventDetail.participantsList;
-    this.caption = '';
+    this.caption = eventDetail.caption === undefined ? '': eventDetail.caption;
     this.OCRResult = [];
     
     this._validate();
