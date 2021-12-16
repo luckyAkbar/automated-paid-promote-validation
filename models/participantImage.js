@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const participantImage = new mongoose.Schema({
   eventID: mongoose.Types.ObjectId,
 
-  filename: {
+  filenames: {
     type: [String],
     required: [true, 'Please profide image filename(s)'],
   },
@@ -23,6 +23,16 @@ const participantImage = new mongoose.Schema({
   NIM: {
     type: String,
     default: '',
+  },
+
+  sie: {
+    type: String,
+    required: false,
+  },
+
+  OCRResult: {
+    type: [String],
+    required: true,
   },
 
   timestamp: {
