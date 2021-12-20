@@ -30,7 +30,6 @@ const createPaidPromoteEventHandler = (req, res) => {
 
       await paidPromoteEvent.createEvent();
     } catch (e) {
-      console.log(e)
       res.status(e.HTTPErrorStatus).json({ message: e.errorMsg })
     }
   });

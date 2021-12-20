@@ -4,19 +4,21 @@ const assert = require('assert').strict;
 const noSQLSanitizer = require('mongo-sanitize');
 const axios = require('axios');
 const ObjectId = require('mongoose').Types.ObjectId;
+const mongoose = require('mongoose');
 const CustomError = require('./CustomError');
 const PaidPromoteEventModel = require('../../models/paidPromoteEvent');
 
 class PaidPromoteEvent {
-  constructor(eventDetail) {
+  constructor(eventData) {
+    const eventDetail = noSQLSanitizer(eventData);
     this.eventID = String(new ObjectId());
     this.eventName = eventDetail.eventName;
     this.startDate = new Date(eventDetail.startDate);
     this.endDate = new Date(eventDetail.endDate);
     this.baseImageNames = eventDetail.baseImageNames;
-    this.maxUploadedImagesByParticipant = Number(eventDetail.maxUploadedImagesByParticipant);
+    this.maxUploadedImagesByParticipant = Number(eventDetail.maxUploadedImagesByParticipant) > 0 ? Number(eventDetail.maxUploadedImagesByParticipant): 1;
     this.participantsList = eventDetail.participantsList;
-    this.caption = '';
+    this.caption = eventDetail.caption === undefined ? '': eventDetail.caption;
     this.OCRResult = [];
     
     this._validate();
@@ -70,6 +72,22 @@ class PaidPromoteEvent {
     }
   };
 
+  static async validateEvent(eventID) {
+    const cleanEventID = noSQLSanitizer(eventID);
+    const now = new Date();
+
+    try {
+      assert.strictEqual(String(cleanEventID).length, 24, 'Event ID is invalid');
+      const result = await PaidPromoteEventModel.findById(cleanEventID);
+
+      assert.notStrictEqual(result, null, 'Event not found.');
+      assert.notStrictEqual((result.startDate > now), true, 'Event not started yet.');
+      assert.notStrictEqual((result.endDate < now), true, 'Event already closed');
+    } catch (e) {
+      throw new CustomError(e.message);
+    }
+  };
+
   static getBaseImagesPath(uploadedFiles) {
     const imagesPath = [];
 
@@ -100,14 +118,17 @@ class PaidPromoteEvent {
     const cleanEventID = noSQLSanitizer(eventID);
 
     try {
-      const { maxUploadedImagesByParticipant } = await PaidPromoteEventModel.findById(cleanEventID).select({
+      const result = await PaidPromoteEventModel.findById(cleanEventID).select({
         _id: 0,
         maxUploadedImagesByParticipant: 1,
       });
 
-      return maxUploadedImagesByParticipant;
+      assert.notStrictEqual(result, null, `Event with ID: ${eventID} is not found.`);
+
+      return result.maxUploadedImagesByParticipant;
     } catch (e) {
-      throw new CustomError(`System failed to get max uploaded images from event with ID: ${eventID}.`, 500);
+      if (e instanceof mongoose.Error.CastError) throw new CustomError('Event ID not valid');
+      throw new CustomError('System failed to get necessary data to process handling agent.', 500); 
     }
   };
 };

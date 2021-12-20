@@ -33,7 +33,7 @@ const paidPromoteEvent = new mongoose.Schema({
     default: 1,
     validate: {
       validator: function() {
-        return (this.maxUploadedImagesByParticipant > 1);
+        return (this.maxUploadedImagesByParticipant > 0);
       },
       message: 'Minimal image uploaded must be greater than 1',
     },

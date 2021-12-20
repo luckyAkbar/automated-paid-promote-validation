@@ -1,7 +1,6 @@
 const router = require('express').Router();
 
 const { createPaidPromoteEventHandler } = require('../handler/createPaidPromoteEventHandler');
-const { paidPromoteParticipantImageHandler } = require('../handler/paidPromoteParticipantImageUploadHandler');
 const { eventDataHandler, renderInputFormPage } = require('../handler/eventDataHandler');
 const { signupHandler, renderSignupPage } = require('../handler/signupHandler');
 const { loginHandler, renderLoginPage } = require('../handler/loginHandler');
@@ -35,9 +34,6 @@ router.route('/admin')
 router.route('/form/:eventID')
   .get(renderInputFormPage)
   .post(eventDataHandler);
-
-router.route('/upload/:eventID')
-  .post(paidPromoteParticipantImageHandler);
 
 router.route('/validation-form/:formId')
   .get((req, res) => {

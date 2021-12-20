@@ -26,11 +26,15 @@
             </div>
             <div>
                 <label for="start" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #757575;">Jam Mulai</label>
-                <input type="time" name="startDate" id="start" required>
+                <input type="date" name="startDate" id="start" required>
             </div>
             <div>
                 <label for="end" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #757575;">Jam Berakhir</label>
-                <input type="time" name="endDate" id="end" required>
+                <input type="date" name="endDate" id="end" required>
+            </div>
+            <div>
+                <label for="maxUploaded">Jumlah gambar peserta</label>
+                <input type="number" name="maxUploadedImagesByParticipant" id="name" placeholder="Jumlah gambar peserta" min="1" required>
             </div>
             <div>
                 <button type="submit" id="button">Submit</button>
