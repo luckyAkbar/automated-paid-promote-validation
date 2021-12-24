@@ -4,8 +4,11 @@ require('dotenv').config();
 
 const assert = require('assert').strict;
 const axios = require('axios');
+const noSQLSanitizer = require('mongo-sanitize');
 const CustomError = require('./CustomError');
 const ParticipantImage = require('../../models/participantImage');
+const PaidPromoteEvent = require('../../models/paidPromoteEvent');
+const Validator = require('./Validator');
 
 class ParticipantData {
   constructor(participantData, eventID, req) {
