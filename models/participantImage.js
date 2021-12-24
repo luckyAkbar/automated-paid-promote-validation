@@ -13,17 +13,28 @@ const participantImage = new mongoose.Schema({
 
   usernameIG: {
     type: String,
-    default: '',
+    required: true,
   },
 
   email: {
     type: String,
-    default: '',
+    required: true,
+    validate: {
+      validator: function() {
+        return Validator.emailAddress(this.email);
+      },
+      message: `Email ${this.email} is not a valid email address`,
+    },
+  },
+
+  name: {
+    type: String,
+    required: true,
   },
 
   NIM: {
     type: String,
-    default: '',
+    required: true,
   },
 
   sie: {
