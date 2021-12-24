@@ -101,11 +101,9 @@ class LoginHandler {
     if (this.loginToken === undefined) return;
 
     try {
-      await Auth.verifyJWT(this.loginToken[process.env.LOGIN_COOKIES_CODENAME]);
-      throw new Error();
+      await Auth.verifyJWT(this.loginToken);
     } catch (e) {
-      if (e instanceof CustomError) return;
-      throw new CustomError('You are already logged in', 400);
+      throw new CustomError('Your cookies is invalid.', 403);
     }
   }
 }
