@@ -1,6 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const Validator = require('../src/classes/Validator');
 
 const participantImage = new mongoose.Schema({
   eventID: mongoose.Types.ObjectId,
