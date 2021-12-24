@@ -48,9 +48,10 @@ class PaidPromoteEvent {
         endDate: this.endDate,
         baseImages: this.baseImageNames,
         maxUploadedImagesByParticipant: this.maxUploadedImagesByParticipant,
-        participantsList: this.participantsList,
+        participantsList: this.participantsList.split(','),
         caption: this.caption,
         OCRResult: this.OCRResult,
+        issuer: this.issuer,
       });
 
       await paidPromoteEvent.save();
