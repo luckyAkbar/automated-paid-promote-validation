@@ -158,7 +158,12 @@ class ParticipantData {
         email: this.email,
         NIM: this.NIM,
         sie: this.sie,
+        name: this.name,
+        usernameIG: this.usernameIG,
         OCRResult: this.OCRResult,
+        validatedAt: new Date(),
+        validationScore: this.validationScore,
+        validated: this.isAlreadyValidated,
       });
 
       await participantImage.save();
