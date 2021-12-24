@@ -25,10 +25,10 @@ const createPaidPromoteEventHandler = (req, res) => {
     try {
       Validator.createValidationForm(req, minUploadedImage, mandatoryKeyLists);
       
-      const paidPromoteEvent = new PaidPromoteEvent(paidPromoteData);
-      res.status(201).json({ eventID: paidPromoteEvent.eventID });
-
+      const paidPromoteEvent = new PaidPromoteEvent(paidPromoteData, req.email);
       await paidPromoteEvent.createEvent();
+
+      res.status(201).redirect(`/form/${paidPromoteEvent.eventID}`);
     } catch (e) {
       res.status(e.HTTPErrorStatus).json({ message: e.errorMsg })
     }
