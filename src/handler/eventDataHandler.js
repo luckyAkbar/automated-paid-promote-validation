@@ -20,11 +20,13 @@ const eventDataHandler = async (req, res) => {
         const mandatoryParticipantData = ParticipantData.extractMandatoryData(req);
         const participantData = new ParticipantData(mandatoryParticipantData, eventID, req);
         const result = await participantData.fetchOCRResult();
-        await participantData.saveParticipantData();
+        res.status(200).render('successPage', {
+          message: 'Data anda sudah kami terima.',
+        });
 
-        res.status(500).json({ message: result });
+        await participantData.validateOCRResult();
+        await participantData.saveParticipantData();
       } catch (e) {
-        console.log(e)
         res.status(e.HTTPErrorStatus).json({ message: e.message });
       }
     });
