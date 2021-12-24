@@ -20,6 +20,7 @@ class PaidPromoteEvent {
     this.participantsList = eventDetail.participantsList;
     this.caption = eventDetail.caption === undefined ? '': eventDetail.caption;
     this.OCRResult = [];
+    this.issuer = issuer;
     
     this._validate();
   };
