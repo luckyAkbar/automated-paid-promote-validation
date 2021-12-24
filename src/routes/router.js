@@ -6,6 +6,15 @@ const { signupHandler, renderSignupPage } = require('../handler/signupHandler');
 const { loginHandler, renderLoginPage } = require('../handler/loginHandler');
 const { renderAdminPage } = require('../handler/adminPageHandler');
 const { checkLoginStatus } = require('../middleware/checkLoginStatus');
+const {
+  mainDashboard,
+  renderAlreadyFilledParticipants,
+  imageParticipantDashboard,
+  validParticipantsDashboard,
+  invalidParticipantsDashboard,
+  finishedEventDashboard,
+  unfinishedEventDashboard,
+} = require('../handler/dashboardHandler');
 
 router.route('/')
   .get((req, res) => {
