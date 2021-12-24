@@ -18,7 +18,11 @@ class ParticipantData {
     this.email = participantData.email;
     this.NIM = participantData.NIM;
     this.sie = participantData.sie;
+    this.name = participantData.name;
     this.OCRResult = null;
+    this.paidPromoteEventDetails = null;
+    this.validationScore = 0;
+    this.isAlreadyValidated = false;
 
     this._validate();
   };
