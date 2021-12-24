@@ -17,7 +17,6 @@ const loginHandler = async (req, res) => {
 
     await userLoginHandler.registerNewSession();
   } catch (e) {
-    console.log(e);
     res.status(e.HTTPErrorStatus).json({ message: e.message });
   }
 };
