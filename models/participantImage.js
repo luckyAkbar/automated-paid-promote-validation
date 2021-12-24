@@ -51,6 +51,21 @@ const participantImage = new mongoose.Schema({
     type: Date,
     default: new Date(),
   },
+
+  validated: {
+    type: Boolean,
+    default: false,
+  },
+
+  validatedAt: {
+    type: Date,
+    required: false,
+  },
+
+  validationScore: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const ParticipantImage = mongoose.model('ParticipantImage', participantImage);
