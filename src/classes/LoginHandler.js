@@ -8,10 +8,10 @@ const Auth = require('./Auth');
 const LoginSession = require('../../models/loginSession');
 
 class LoginHandler {
-  constructor(email, plainPassword) {
+  constructor(email, plainPassword, cookies) {
     this.email = noSQLSanitizer(email);
     this._plainPassword = noSQLSanitizer(plainPassword);
-    this.loginToken = null;
+    this.loginToken = noSQLSanitizer(cookies[process.env.LOGIN_COOKIES_CODENAME]);
     this.JWTLoginCookies = null;
 
     this._validate();
