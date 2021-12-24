@@ -18,6 +18,10 @@ class Auth {
     assert.notStrictEqual(this.cookie, undefined, new CustomError('You are not logged in. Please log in first.', 403));
   };
 
+  getUserEmail() {
+    return this.email;
+  }
+
   static async createHash(plainText) {
     try {
       const salt = await bcrypt.genSalt(Number(process.env.HASH_ROUND));
