@@ -9,7 +9,7 @@ const CustomError = require('./CustomError');
 const PaidPromoteEventModel = require('../../models/paidPromoteEvent');
 
 class PaidPromoteEvent {
-  constructor(eventData) {
+  constructor(eventData, issuer) {
     const eventDetail = noSQLSanitizer(eventData);
     this.eventID = String(new ObjectId());
     this.eventName = eventDetail.eventName;
