@@ -41,6 +41,34 @@ router.route('/protected')
 router.route('/admin')
   .get(checkLoginStatus, renderAdminPage);
 
+router.route('/dashboard')
+  .all(checkLoginStatus)
+  .get(mainDashboard);
+
+router.route('/dashboard/alreadyFilled')
+  .all(checkLoginStatus)
+  .get(renderAlreadyFilledParticipants);
+
+router.route('/dashboard/validParticipants')
+  .all(checkLoginStatus)
+  .get(validParticipantsDashboard);
+
+router.route('/dashboard/invalidParticipants')
+  .all(checkLoginStatus)
+  .get(invalidParticipantsDashboard);
+
+router.route('/dashboard/finishedEvent')
+  .all(checkLoginStatus)
+  .get(finishedEventDashboard);
+
+router.route('/dashboard/unfinishedEvent')
+  .all(checkLoginStatus)
+  .get(unfinishedEventDashboard);
+
+router.route('/dashboard/image/:imageName')
+  .all(checkLoginStatus)
+  .get(imageParticipantDashboard);
+
 router.route('/form/:eventID')
   .get(renderInputFormPage)
   .post(eventDataHandler);
