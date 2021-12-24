@@ -6,6 +6,7 @@ const { signupHandler, renderSignupPage } = require('../handler/signupHandler');
 const { loginHandler, renderLoginPage } = require('../handler/loginHandler');
 const { renderAdminPage } = require('../handler/adminPageHandler');
 const { checkLoginStatus } = require('../middleware/checkLoginStatus');
+const { logoutHandler } = require('../handler/logoutHandler');
 const {
   mainDashboard,
   renderAlreadyFilledParticipants,
@@ -28,6 +29,9 @@ router.route('/create')
 router.route('/login')
   .get(renderLoginPage)
   .post(loginHandler);
+
+router.route('/logout')
+  .get(logoutHandler);
 
 router.route('/signup')
   .get(renderSignupPage)
