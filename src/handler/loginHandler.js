@@ -25,7 +25,13 @@ const renderLoginPage = async (req, res) => {
   const { cookies } = req;
 
   try {
-    await LoginHandler.checkIsAlreadyLoggedIn(cookies);
+    const alreadyLoggedIn = await LoginHandler.checkIsAlreadyLoggedIn(cookies);
+    
+    if (alreadyLoggedIn) {
+      res.redirect('/admin');
+      return;
+    }
+
     res.status(200).render('login-page');
   } catch (e) {
     res.status(e.HTTPErrorStatus).json({ message: e.message });
