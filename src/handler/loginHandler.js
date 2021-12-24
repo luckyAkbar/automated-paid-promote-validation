@@ -7,8 +7,7 @@ const loginHandler = async (req, res) => {
   const { cookies } = req;
   
   try {
-    const userLoginHandler = new LoginHandler(email, password);
-    userLoginHandler.rawLoginToken = cookies;
+    const userLoginHandler = new LoginHandler(email, password, cookies);
 
     await userLoginHandler.validateLoginToken();
     await userLoginHandler.validatePassword();
