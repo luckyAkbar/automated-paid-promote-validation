@@ -26,19 +26,14 @@ class LoginHandler {
   };
 
   static async checkIsAlreadyLoggedIn(cookies) {
-    if (cookies === undefined) return;
+    if (cookies[process.env.LOGIN_COOKIES_CODENAME] === undefined) return false;
 
     try {
       await Auth.verifyJWT(cookies[process.env.LOGIN_COOKIES_CODENAME]);
-      throw new Error()
+      return true;
     } catch (e) {
-      if (e instanceof CustomError) return;
-      throw new CustomError('You are already logged in', 400);
+      throw new CustomError('Your cookies are invalid. Please relogin.', 400);
     }
-  }
-
-  set rawLoginToken(rawJWT) {
-    this.loginToken = noSQLSanitizer(rawJWT);
   }
 
   _validate() {
