@@ -8,10 +8,10 @@ const Auth = require('./Auth');
 const LoginSession = require('../../models/loginSession');
 
 class LoginHandler {
-  constructor(email, plainPassword) {
+  constructor(email, plainPassword, cookies) {
     this.email = noSQLSanitizer(email);
     this._plainPassword = noSQLSanitizer(plainPassword);
-    this.loginToken = null;
+    this.loginToken = noSQLSanitizer(cookies[process.env.LOGIN_COOKIES_CODENAME]);
     this.JWTLoginCookies = null;
 
     this._validate();
@@ -26,19 +26,14 @@ class LoginHandler {
   };
 
   static async checkIsAlreadyLoggedIn(cookies) {
-    if (cookies === undefined) return;
+    if (cookies[process.env.LOGIN_COOKIES_CODENAME] === undefined) return false;
 
     try {
       await Auth.verifyJWT(cookies[process.env.LOGIN_COOKIES_CODENAME]);
-      throw new Error()
+      return true;
     } catch (e) {
-      if (e instanceof CustomError) return;
-      throw new CustomError('You are already logged in', 400);
+      throw new CustomError('Your cookies are invalid. Please relogin.', 400);
     }
-  }
-
-  set rawLoginToken(rawJWT) {
-    this.loginToken = noSQLSanitizer(rawJWT);
   }
 
   _validate() {
@@ -81,7 +76,8 @@ class LoginHandler {
 
   async setCookies(res) {
     this.JWTLoginCookies = await this._createLoginCookies();
-    res.status(200).cookie(process.env.LOGIN_COOKIES_CODENAME, this.JWTLoginCookies, {
+
+    res.cookie(process.env.LOGIN_COOKIES_CODENAME, this.JWTLoginCookies, {
       maxAge: Number(process.env.JWT_LOGIN_COOKIE_EXPIRES_SEC) * 1000,
       httpOnly: true,
     });
@@ -105,11 +101,9 @@ class LoginHandler {
     if (this.loginToken === undefined) return;
 
     try {
-      await Auth.verifyJWT(this.loginToken[process.env.LOGIN_COOKIES_CODENAME]);
-      throw new Error();
+      await Auth.verifyJWT(this.loginToken);
     } catch (e) {
-      if (e instanceof CustomError) return;
-      throw new CustomError('You are already logged in', 400);
+      throw new CustomError('Your cookies is invalid.', 403);
     }
   }
 }

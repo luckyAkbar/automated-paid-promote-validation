@@ -9,7 +9,7 @@ const CustomError = require('./CustomError');
 const PaidPromoteEventModel = require('../../models/paidPromoteEvent');
 
 class PaidPromoteEvent {
-  constructor(eventData) {
+  constructor(eventData, issuer) {
     const eventDetail = noSQLSanitizer(eventData);
     this.eventID = String(new ObjectId());
     this.eventName = eventDetail.eventName;
@@ -20,6 +20,7 @@ class PaidPromoteEvent {
     this.participantsList = eventDetail.participantsList;
     this.caption = eventDetail.caption === undefined ? '': eventDetail.caption;
     this.OCRResult = [];
+    this.issuer = issuer;
     
     this._validate();
   };
@@ -47,9 +48,10 @@ class PaidPromoteEvent {
         endDate: this.endDate,
         baseImages: this.baseImageNames,
         maxUploadedImagesByParticipant: this.maxUploadedImagesByParticipant,
-        participantsList: this.participantsList,
+        participantsList: this.participantsList.split(','),
         caption: this.caption,
         OCRResult: this.OCRResult,
+        issuer: this.issuer,
       });
 
       await paidPromoteEvent.save();
@@ -98,9 +100,9 @@ class PaidPromoteEvent {
     return imagesPath;
   };
 
-  static getPaidPromoteData(body, files) {
+  static getPaidPromoteData(body, file) {
     const requestBody = noSQLSanitizer(body);
-    const uploadedFiles = noSQLSanitizer(files);
+    const uploadedFiles = noSQLSanitizer(file);
 
     const fullFields = process.env.LIST_FULL_DATA_TO_INSTANTIATE_NEW_VALIDATION_FORM.split(',');
     const configurationObject = {};

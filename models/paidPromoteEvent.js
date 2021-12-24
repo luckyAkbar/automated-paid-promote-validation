@@ -1,6 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const Validator = require('../src/classes/Validator');
 
 const paidPromoteEvent = new mongoose.Schema({
   _id: {
@@ -53,6 +54,17 @@ const paidPromoteEvent = new mongoose.Schema({
     type: [String],
     default: [],
     required: false,
+  },
+
+  issuer: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function () {
+        return Validator.emailAddress(this.issuer);
+      },
+      message: 'Please insert correct email address to create new paid promote event',
+    },
   },
 });
 

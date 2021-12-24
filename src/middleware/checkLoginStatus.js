@@ -9,6 +9,8 @@ const checkLoginStatus = async (req, res, next) => {
   try {
     const loginChecker = new Auth(cookies, Number(process.env.LOGIN_REQUIRED_ROUTE_MINIMUM_PERMISSION));
     await loginChecker.createLoginCheckerMiddleware();
+
+    req.email = loginChecker.getUserEmail();
     next();
   } catch (e) {
     res.status(e.HTTPErrorStatus).redirect('/login');
