@@ -65,6 +65,58 @@ class ParticipantData {
     }
   };
 
+  _findUsernameIGInParticipantOCRResult() {
+    const OCRResult = this._cleanOCRResult(this.OCRResult[0].split(','));
+
+    for (let i = 0; i < OCRResult.length; i++) {
+      if (OCRResult[i].trim() === '') continue;
+      if (OCRResult[i].trim() === this.usernameIG) {
+        this.validationScore += 50;
+        return;
+      }
+    }
+  };
+
+  _removeNonAlphanumChar(inputString) {
+    return inputString.replace(/[^0-9a-z]/gi, '')
+  }
+
+  _cleanOCRResult(arrOfString) {
+    for (let i = 0; i < arrOfString.length; i++) {
+      arrOfString[i] = this._removeNonAlphanumChar(arrOfString[i]);
+    }
+
+    return arrOfString;
+  }
+
+  _validateOCRResult() {
+    const { OCRResult } = this.paidPromoteEventDetails;
+    const feedImageOCRResult = this._cleanOCRResult(OCRResult[0].split(','));
+    const participantOCRResult = this._cleanOCRResult(this.OCRResult[0].split(','));
+
+    for (let i = 0; i < feedImageOCRResult.length; i++) {
+      for (let j = 0; j < participantOCRResult.length; j++) {
+        if (feedImageOCRResult[i].trim() === '' || participantOCRResult[j].trim() === '') continue;
+        if (feedImageOCRResult[i].trim() === participantOCRResult[j].trim()) this.validationScore += 10;
+        if (this.validationScore > 99) return;
+      }
+    }
+  };
+
+  _validateCaptionDetectedOnParticipantImage() {
+    const { caption } = this.paidPromoteEventDetails;
+    const captionComponents = caption.split(' ');
+    const participantOCRResult = this._cleanOCRResult(this.OCRResult[0].split(','));
+
+    for (let i = 0; i < captionComponents.length; i++) {
+      if (captionComponents[i] === '') continue;
+      
+      for (let j = 0; j < participantOCRResult.length; j++) {
+        if (captionComponents[i].trim() === participantOCRResult[j].trim()) this.validationScore += 10;
+      }
+    }
+  }
+
   async fetchOCRResult() {
     try {
       const { data } = await axios.post(process.env.OCR_API_URL, {
@@ -77,6 +129,26 @@ class ParticipantData {
       throw new CustomError('System failed to get OCR result from your uploaded image. Please do it again.', 500);
     }
   };
+
+  async validateOCRResult() {
+    try {
+      this.paidPromoteEventDetails = await PaidPromoteEvent.findById(
+        this.eventID,
+        {
+          _id: 0,
+          OCRResult: 1,
+          caption: 1,
+        },
+      );
+      
+      this._findUsernameIGInParticipantOCRResult();
+      this._validateCaptionDetectedOnParticipantImage();
+      this._validateOCRResult();
+      this.isAlreadyValidated = true;
+    } catch (e) {
+      console.log('System failed to perform OCR result validation. This may result user OCR result is not valid (although it may have valid result.', e);
+    }
+  }
 
   async saveParticipantData() {
     try {
