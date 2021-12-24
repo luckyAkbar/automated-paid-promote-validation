@@ -22,6 +22,7 @@ router.route('/')
   });
 
 router.route('/create')
+  .all(checkLoginStatus)
   .post(createPaidPromoteEventHandler);
 
 router.route('/login')
