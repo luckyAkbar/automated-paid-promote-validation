@@ -13,7 +13,9 @@ const signupHandler = async (req, res) => {
     const signup = new Signup(email, password, 'user');
     await signup.createUser();
 
-    res.status(201).json({ message: `User created. You can login with your new account now.` });
+    res.status(201).render('successPage', {
+      message: 'Akun anda telah dibuat. Silahkan login dengan akun baru anda',
+    });
   } catch (e) {
     res.status(e.HTTPErrorStatus).json({ message: e.message });
   }
