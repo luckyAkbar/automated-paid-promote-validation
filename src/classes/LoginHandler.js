@@ -76,7 +76,8 @@ class LoginHandler {
 
   async setCookies(res) {
     this.JWTLoginCookies = await this._createLoginCookies();
-    res.status(200).cookie(process.env.LOGIN_COOKIES_CODENAME, this.JWTLoginCookies, {
+
+    res.cookie(process.env.LOGIN_COOKIES_CODENAME, this.JWTLoginCookies, {
       maxAge: Number(process.env.JWT_LOGIN_COOKIE_EXPIRES_SEC) * 1000,
       httpOnly: true,
     });
