@@ -45,11 +45,11 @@ class Validator {
   };
 
   static emailAddress(email) {
-    const forbiddenEmailChar = /[!#$%^&*()_+\-=\[\]{};':"\\|,<>\/?]+/;
-    const emailParts = email.split('@');
-    const serverEmail = emailParts[1].split('.');
-
     try {
+      const forbiddenEmailChar = /[!#$%^&*()_+\-=\[\]{};':"\\|,<>\/?]+/;
+      const emailParts = email.split('@');
+      const serverEmail = emailParts[1].split('.');
+      
       assert.notStrictEqual((String(email).length > 255), true);
       assert.notStrictEqual((emailParts[0].length > 105 || emailParts[1].length > 105), true);
       assert.notStrictEqual((emailParts[0].length === 0 || emailParts[1].length === 1), true);
