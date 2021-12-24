@@ -28,7 +28,7 @@ const createPaidPromoteEventHandler = (req, res) => {
       const paidPromoteEvent = new PaidPromoteEvent(paidPromoteData, req.email);
       await paidPromoteEvent.createEvent();
 
-      res.status(201).redirect(`/form/${paidPromoteEvent.eventID}`);
+      res.status(201).redirect('/dashboard');
     } catch (e) {
       res.status(e.HTTPErrorStatus).json({ message: e.errorMsg })
     }
