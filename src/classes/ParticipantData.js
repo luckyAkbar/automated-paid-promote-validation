@@ -36,7 +36,7 @@ class ParticipantData {
       data[datalist[i]] = req.body[datalist[i]];
     }
 
-    return data;
+    return noSQLSanitizer(data);
   };
 
   _validate() {
