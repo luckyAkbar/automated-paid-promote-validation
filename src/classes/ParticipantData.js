@@ -45,6 +45,8 @@ class ParticipantData {
     for (let i = 0; i < listFullData.length; i++) {
       assert(this[listFullData[i]], undefined, new CustomError(`${listFullData[i]} can't have null value`));
     }
+
+    Validator.emailAddress(this.email);
   }
 
   _extractImageName({ file, files }) {
