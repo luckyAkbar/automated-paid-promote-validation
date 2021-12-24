@@ -100,9 +100,9 @@ class PaidPromoteEvent {
     return imagesPath;
   };
 
-  static getPaidPromoteData(body, files) {
+  static getPaidPromoteData(body, file) {
     const requestBody = noSQLSanitizer(body);
-    const uploadedFiles = noSQLSanitizer(files);
+    const uploadedFiles = noSQLSanitizer(file);
 
     const fullFields = process.env.LIST_FULL_DATA_TO_INSTANTIATE_NEW_VALIDATION_FORM.split(',');
     const configurationObject = {};
