@@ -14,5 +14,4 @@ def read_text_from_image(image_name):
 
         return text
     except Exception as e:
-        print(e)
         raise Exception('Failed to extract text from image, probably caused by img not found error.')
