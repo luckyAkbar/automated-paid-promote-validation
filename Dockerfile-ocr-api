@@ -1,0 +1,56 @@
+# FROM alpine
+
+# WORKDIR /app
+
+# RUN apk update
+# RUN apk upgrade
+# RUN apk add tesseract-ocr
+
+# RUN apk add build-base python3-dev py-pip jpeg-dev zlib-dev
+
+# ENV LIBRARY_PATH=/lib:/usr/lib
+# ENV PYTHONUNBUFFERED=1
+
+# RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+# RUN python3 -m ensurepip
+
+# RUN pip3 install wheel
+# RUN pip3 install --no-cache --upgrade pip setuptools
+
+# RUN pip install --upgrade pip
+
+# RUN pip3 install Image
+# RUN pip3 install pytesseract --ignore-installed packaging==20.9
+# RUN pip3 install fastapi
+# RUN pip3 install uvicorn
+
+# COPY . .
+
+# WORKDIR /app/src/api/ocr
+
+# EXPOSE 6007
+
+FROM python:3.8
+
+RUN apt-get update
+RUN apt-get install tesseract-ocr -y
+
+WORKDIR /app
+RUN pip3 install wheel
+RUN pip3 install --no-cache --upgrade pip setuptools
+
+RUN pip install --upgrade pip
+
+RUN pip3 install Image
+RUN pip3 install tesseract
+RUN pip3 install pytesseract --ignore-installed packaging==20.9
+RUN pip3 install fastapi
+RUN pip3 install uvicorn
+
+COPY ./src/api/ocr .
+
+EXPOSE 80
+
+RUN ls
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
