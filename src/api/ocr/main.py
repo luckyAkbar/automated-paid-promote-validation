@@ -18,7 +18,6 @@ def root(images: Images):
       ocr_reading = read_text_from_image(image_name)
       ocr_results.append(ocr_reading)
   except Exception as e:
-    print(e)
     return {"result": []}
 
   return {"result": ocr_results}
