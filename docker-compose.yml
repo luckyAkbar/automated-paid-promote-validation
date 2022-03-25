@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  ocr_api:
+    image: ocr-api
+    ports:
+      - "6007:80"
+    volumes:
+      - ./uploads:/app/uploads/
+  main_server:
+    build: .
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - ocr_api
+    volumes:
+      - ./uploads:/app/uploads/
