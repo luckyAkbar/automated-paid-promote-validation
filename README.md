@@ -27,13 +27,11 @@ Sistem kami hadir dengan menggabungkan teknologi website dan machine learning un
 ## Cara Menjalankan
 
 1. Pull / Clone branch master repository ini
-2. Jalankan perintah "npm install"
-3. Install tesseract-ocr
-4. jalankan perintah "pip install pytesseract"
-5. Jalankan perintah "pip install uvicorn"
-6. Jalankan OCR API dengan navigasi ke /src/api/ocr dan jalankan perintah: "uvicorn main:app --reload --port 6008"
-7. Navigasi ke / dan jalankan perintah "npm run start"
-8. Aplikasi siap digunakan
+2. Pastikan anda sudah menginstall docker dan docker-compose
+3. Pada root directori kode sumber ini, jalankan perintah `docker build -f Dockerfile-ocr-api -t ocr-api .`
+4. Create .env file
+5. Run `docker-compose up -d`
+6. Your app should be accessible through port 31000
 
 ## Kredit
 
